@@ -1,0 +1,92 @@
+# Registration
+language: "Til"
+language_my: "🇺🇿 O'zbekcha"
+language_choose: "🇺🇿 Iltimos, tilni tanlang."
+language_set: "🇺🇿 O'zbek tili tanlandi."
+request_contact: "Davom etish uchun «Raqamni jo'natish» tugmasini bosing yoki\n boshqa raqamni quyidagi formatda jo'nating.\n\n👉 +998901234567"
+request_contact_btn: "Raqamni jo'natish"
+request_fullname_msg: "Familiya ismingizni ketma-ket kiriting, masalan:\n\n<b>👉   Alisherov Valisher</b>"
+incorrect_format_number: "Raqam noto'g'ri formatda jo'natildi, iltimos qayta jo'nating:"
+
+# Main menu
+main_menu: "Bosh menyu"
+menu_catalog_btn: "🛍 Katalog"
+cart_btn: "🛒 Savat"
+menu_orders_btn: "📦 Buyurtmalarim"
+menu_settings_btn: "⚙ Sozlamalar"
+menu_posts_btn: "📢 Yangiliklar"
+menu_help_btn: "❓ Yordam"
+choose_category: "Bo'limni tanlang"
+
+# Product message template
+product_template: |-
+  <b>{title}</b>
+
+  {description}
+
+  <a href='{link}'>Mahsulot haqida ko'proq ma'lumot</a>
+
+  <b>Tavsilotlar:</b>  {phone_number}
+
+  <b>Narxi:</b>  {price} {currency}
+
+catalog_empty: "Ushbu bo'limda hozircha maxsulot mavjud emas"
+products: "Maxsulotlar"
+add_cart_btn: "➕ Savatga qo'shish"
+added_to_cart_msg: "✅ Savatga qo'shildi."
+go_to_cart_btn: "Savatga 🛒"
+products_in_cart: "Savatdagi maxsulotlar:"
+remove_from_cart_btn: "🗑 O'chirish"
+product_deleted_from_cart: "✅ Maxsulot savatdan o'chirildi"
+cart_is_empty: "😞 Afsuski hozirda savatda maxsulot mavjud emas."
+item_not_in_stcok_msg: "Afsuski, ushbu mahsulot hozircha mavjud emas ..."
+make_payment: "To'lovni amalga oshiring"
+payment_description: |-
+  E'tiborli bo'ling:
+    
+    To'lovdagi barcha ma'lumotlar to'lov amalga
+    oshirilgandan so'ng bizga jo'natiladi va siz
+    bilan o'sha zaxoti bog'lanamiz. Barcha 
+    ma'lumotlaringiz to'g'ri ekanligiga ishonch hosil qiling.
+
+  Ma'lumot uchun:  {phone_number}.
+pay: "To'lash"
+cancel_payment: "🚫 Bekor qilish"
+to_courtyard_house: "Hovli uyga yetkazish"
+to_apartment: "Kvartiraga yetkazish"
+delivering: "Yetkazib berish"
+successfully_payment_msg: |-
+  ✅ Tabriklaymiz, siz xarid uchun muvaffaqiyatli
+  to'lovni amalga oshirdingiz. Siz bilan tez orada
+  aloqaga chiqamiz.
+
+  <b>Murojat uchun:</b>   {phone_number}
+
+  <b>Buyurtma raqami:</b>   <code>#{order_number}</code>
+
+my_orders: "Mavjud buyurtmalar"
+no_orders: "Kechirasiz sizda hozir hech qanday buyurtma yo'q"
+order_info_template: |-
+  <b>Buyurtma raqmi:</b>   <code>#{order_id}</code>
+
+  <b>💳 To'langan summa:</b>   {paid_money}
+
+  <b>📅 To'lova vaqti:</b>   {payment_time}
+
+  <b>📍 Manzil:</b>
+  <code>{address}</code>
+
+  <b>📦 Olingan maxsulotlar:</b>
+  <code>{ordered_products}</code>
+
+# Settings
+settings: "Sozlamalar"
+change_language_btn: "🇺🇿 Tilni o'zgartirish"
+change_number_btn: "📱 Raqamni o'zgartirish"
+number_changed_msg: "✅ Raqamingiz {number} ga muvaffaqiyatli o'zgartirildi."
+current_number_msg: "Sizning hozirgi raqamingiz: <b>{number}</b>"
+send_location_btn: "📍 Lokatsiyamni jo'natish"
+confirm_btn: "✅ Manzilni tasdiqlash"
+
+# Other
+back: "← Orqaga"
