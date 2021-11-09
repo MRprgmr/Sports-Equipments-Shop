@@ -14,7 +14,7 @@ async def get_user(bot_user) -> User:
     user_data = dict(user_id=bot_user.id,
                      first_name=bot_user.first_name,
                      username=bot_user.username)
-    user = await stoa((await stoa(User.objects.filter)(**user_data)).first)()
+    user = await stoa((await stoa(User.objects.filter)(user_id=bot_user.id)).first)()
     if not user:
         user = await stoa(User.objects.create)(**user_data)
     return user
