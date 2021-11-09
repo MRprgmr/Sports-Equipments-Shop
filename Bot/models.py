@@ -45,7 +45,7 @@ class Product(models.Model):
 class User(models.Model):
     """Model User"""
 
-    user_id = models.IntegerField(verbose_name='ID User', primary_key=True)
+    user_id = models.IntegerField(verbose_name='ID User', primary_key=True, unique=True)
     username = models.CharField(
         max_length=100, verbose_name='@username', null=True, blank=True)
     first_name = models.CharField(
