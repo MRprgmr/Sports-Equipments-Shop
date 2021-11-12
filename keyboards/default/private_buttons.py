@@ -53,7 +53,7 @@ def get_contact_send_template(lang):
     return text, keyboard
 
 
-def get_main_menu_template(lang) -> tuple[str, ReplyKeyboardMarkup]:
+def get_main_menu_template(lang):
     """Return main menu text and keyboard for specific language"""
 
     text = _('main_menu', lang)
@@ -77,7 +77,7 @@ def get_main_menu_template(lang) -> tuple[str, ReplyKeyboardMarkup]:
     return text, keyboard
 
 
-def get_user_settings_template(user: User) -> tuple[str, ReplyKeyboardMarkup]:
+def get_user_settings_template(user: User):
     """Return keyboard and text when user press settings button"""
 
     text = _('settings', user.lang)
@@ -96,7 +96,7 @@ def get_user_settings_template(user: User) -> tuple[str, ReplyKeyboardMarkup]:
     return text, keyboard
 
 
-def get_catalogs_list_template(user: User) -> tuple[str, ReplyKeyboardMarkup]:
+def get_catalogs_list_template(user: User):
     """Return available categories keyboard and text"""
 
     text = _('choose_category', user.lang)
