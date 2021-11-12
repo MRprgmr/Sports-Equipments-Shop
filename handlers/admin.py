@@ -44,7 +44,7 @@ def get_users():
     users = User.objects.all()
     result = []
     for usr in users:
-        result.append(usr.telegram_id)
+        result.append(usr.user_id)
     return result
 
 

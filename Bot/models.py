@@ -75,7 +75,7 @@ class User(models.Model):
 
 
 class Order(models.Model):
-    "Models order"
+    """Models order"""
 
     id = models.BigAutoField(primary_key=True, verbose_name='Buyurtma raqami')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Foydalanuvchi", related_name='orders')

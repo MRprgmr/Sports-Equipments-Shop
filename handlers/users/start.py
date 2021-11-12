@@ -15,6 +15,7 @@ from utils.core import get_user, phone_number_validater, send_main_menu, stoa
 @dp.message_handler(CommandStart(), state='*')
 async def bot_start(message: types.Message):
     """When user send command /start"""
+
     user: User = await get_user(message.from_user)
     if not user.lang and not user.is_registered:
         text, keyboard = await stoa(languages_selection_template)()

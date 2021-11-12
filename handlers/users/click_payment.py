@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from aiogram import types
@@ -47,7 +48,7 @@ def get_shipping_options(user):
 
 
 @dp.callback_query_handler(text='make_payment', state=CartState.opened_cart)
-async def send_payment_invoice(call: types.CallbackQuery, callback_data: dict):
+async def send_payment_invoice(call: types.CallbackQuery):
     """When user press pay button in cart"""
 
     user: User = await get_user(call.from_user)
@@ -72,7 +73,7 @@ async def send_payment_invoice(call: types.CallbackQuery, callback_data: dict):
                               need_name=True,
                               need_phone_number=True,
                               need_shipping_address=True,
-                              payload=callback_data['products'],
+                              payload="invoice_for_products",
                               reply_markup=keyboard)
 
     await ClickPaymentState.pay_button.set()
@@ -111,6 +112,10 @@ def get_products_list(order):
     return order.products_list
 
 
+def get_ordered_products_list(user: User):
+    return [product.id for product in user.product_cart.all()]
+
+
 @dp.message_handler(content_types=ContentTypes.SUCCESSFUL_PAYMENT, state=ClickPaymentState.expect_payment)
 async def got_payment(message: types.Message):
     """When user has successfully transferred money for products"""
@@ -126,8 +131,7 @@ async def got_payment(message: types.Message):
     name = message.successful_payment.order_info.name
     phone_number = '+' + message.successful_payment.order_info.phone_number
     total_amount = message.successful_payment.total_amount // 100
-    product_list = list(
-        map(int, message.successful_payment.invoice_payload.split(',')))
+    product_list = await stoa(get_ordered_products_list)(user)
     shipping_option = shipping_options[message.successful_payment.shipping_option_id]
 
     order: Order = await stoa(Order.objects.create)(user=user,
@@ -149,8 +153,8 @@ async def got_payment(message: types.Message):
 
     try:
         await dp.bot.send_message(chat_id=int(ORDERS_GROUP), text=to_group_message)
-    except:
-        pass
+    except Exception as error:
+        logging.error(str(error))
 
     await stoa(user.product_cart.clear)()
 

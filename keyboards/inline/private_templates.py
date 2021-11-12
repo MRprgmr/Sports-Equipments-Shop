@@ -136,7 +136,7 @@ def get_payment_buttons(user, products):
 def make_orders_view_template(user: User, id):
     """Return user orders template"""
 
-    orders = user.orders.all()
+    orders = user.orders.order_by('-creation_date')
     count = orders.count()
 
     if count == 0:
