@@ -37,7 +37,7 @@ def languages_selection_template() -> Tuple[str, List[List]]:
     return text, keyboard
 
 
-def get_contact_send_template(lang) -> tuple[str, ReplyKeyboardMarkup]:
+def get_contact_send_template(lang):
     """Return contact send text and button"""
 
     text = _('request_contact', lang)
