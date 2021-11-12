@@ -1,13 +1,15 @@
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
-from loader import dp
-from utils.core import send_main_menu
-from filters.private_filters import text_translations_filter
-from keyboards.default.private_buttons import get_user_settings_template, languages_selection_template, get_contact_send_template
-from utils.core import stoa, get_user, phone_number_validater
+
 from Bot.models import User
-from states.private_states import SettingsState
+from filters.private_filters import text_translations_filter
+from keyboards.default.private_buttons import get_user_settings_template, languages_selection_template, \
+    get_contact_send_template
+from loader import dp
 from localization.strings import check_language_by_text, _
+from states.private_states import SettingsState
+from utils.core import send_main_menu
+from utils.core import stoa, get_user, phone_number_validater
 
 
 @dp.message_handler(text_translations_filter('menu_settings_btn'), state='*')

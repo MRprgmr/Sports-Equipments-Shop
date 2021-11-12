@@ -1,9 +1,9 @@
-from django.contrib import admin
 from django.conf import settings
+from django.contrib import admin
 from django.contrib.auth.models import Group
+
 from Bot.models import Order, User, Category, Product
 from .filters import CategoryFilter
-
 
 admin.site.unregister(Group)
 admin.site.site_header = settings.PROJECT_NAME
@@ -55,6 +55,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     def custom_price(self, obj):
         return f"{obj.total_cost} so'm"
+
     custom_price.short_description = "To'langan summa"
 
     list_display = ('id', 'user', 'custom_price', 'creation_date')

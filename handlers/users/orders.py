@@ -2,11 +2,12 @@ from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.types.callback_query import CallbackQuery
 from aiogram.types.reply_keyboard import ReplyKeyboardRemove
+
 from Bot.models import User
+from filters.private_filters import text_translations_filter
 from keyboards.inline.private_templates import make_orders_view_template, orders_button
 from loader import dp
 from localization.strings import _
-from filters.private_filters import text_translations_filter
 from states.private_states import OrdersState
 from utils.core import get_user, send_main_menu, stoa
 
@@ -14,14 +15,14 @@ from utils.core import get_user, send_main_menu, stoa
 @dp.message_handler(text_translations_filter('menu_orders_btn'), state='*')
 async def list_orders(message: types.Message):
     """Show user orders"""
-    
+
     user: User = await get_user(message.from_user)
     text, keyboard = await stoa(make_orders_view_template)(user, 0)
 
     if text == 'empty':
         await message.answer(text=_('no_orders', user.lang))
         return
-    
+
     await message.answer(_('my_orders', user.lang), reply_markup=ReplyKeyboardRemove())
     await message.answer(text=text, reply_markup=keyboard)
     await OrdersState.order_view.set()

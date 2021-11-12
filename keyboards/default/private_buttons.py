@@ -1,7 +1,9 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from localization.strings import get_all_languages, _
 from typing import List, Tuple
+
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
 from Bot.models import User, Category
+from localization.strings import get_all_languages, _
 
 
 def get_back_button(user: User):
@@ -23,7 +25,7 @@ def languages_selection_template() -> Tuple[str, List[List]]:
 
     text = f"🈯️  <b>{' | '.join(languages_title)}</b>\n\n"
     text += "\n——————————————\n".join([_('language_choose', lang_id)
-                                      for lang_id in languages])
+                                       for lang_id in languages])
 
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
@@ -35,7 +37,7 @@ def languages_selection_template() -> Tuple[str, List[List]]:
     return text, keyboard
 
 
-def get_contact_send_template(lang) -> Tuple[str, List[List]]:
+def get_contact_send_template(lang) -> tuple[str, ReplyKeyboardMarkup]:
     """Return contact send text and button"""
 
     text = _('request_contact', lang)
@@ -51,7 +53,7 @@ def get_contact_send_template(lang) -> Tuple[str, List[List]]:
     return text, keyboard
 
 
-def get_main_menu_template(lang) -> Tuple[str, List[List]]:
+def get_main_menu_template(lang) -> tuple[str, ReplyKeyboardMarkup]:
     """Return main menu text and keyboard for specific language"""
 
     text = _('main_menu', lang)
@@ -75,7 +77,7 @@ def get_main_menu_template(lang) -> Tuple[str, List[List]]:
     return text, keyboard
 
 
-def get_user_settings_template(user: User) -> Tuple[str, List[List]]:
+def get_user_settings_template(user: User) -> tuple[str, ReplyKeyboardMarkup]:
     """Return keyboard and text when user press settings button"""
 
     text = _('settings', user.lang)
@@ -94,7 +96,7 @@ def get_user_settings_template(user: User) -> Tuple[str, List[List]]:
     return text, keyboard
 
 
-def get_catalogs_list_template(user: User) -> Tuple[str, List[List]]:
+def get_catalogs_list_template(user: User) -> tuple[str, ReplyKeyboardMarkup]:
     """Return available categories keyboard and text"""
 
     text = _('choose_category', user.lang)
@@ -103,7 +105,7 @@ def get_catalogs_list_template(user: User) -> Tuple[str, List[List]]:
     categories = Category.objects.filter(status=True)
 
     if categories.count() & 1:
-        end = categories.count()-1
+        end = categories.count() - 1
     else:
         end = categories.count()
 
@@ -111,7 +113,7 @@ def get_catalogs_list_template(user: User) -> Tuple[str, List[List]]:
         keyboard_list.append(
             [
                 KeyboardButton(text=categories[i].title),
-                KeyboardButton(text=categories[i+1].title)
+                KeyboardButton(text=categories[i + 1].title)
             ]
         )
     if categories.count() & 1:

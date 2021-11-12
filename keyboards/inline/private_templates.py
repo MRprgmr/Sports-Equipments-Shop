@@ -1,10 +1,11 @@
+import pytz
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from django.conf import settings
-from data.config import CONTACT_NUMBER as contact_number
+
 from Bot.models import Category, Order, User, Product
+from data.config import CONTACT_NUMBER as contact_number
 from localization.strings import _
-import pytz
 from utils.core import calculate_total_cost
 
 media_root = settings.MEDIA_ROOT
@@ -15,7 +16,6 @@ product_view_callback = CallbackData(
 add_to_cart = CallbackData('add_to_cart', 'product_id')
 remove_from_cart = CallbackData('remove_from_cart', 'product_id', 'current_number')
 product_in_cart = CallbackData('product_in_cart', 'product_id')
-payment_button = CallbackData('make_payment', 'products')
 orders_button = CallbackData('orders', 'order_id')
 
 
@@ -93,15 +93,15 @@ def make_cart_view_template(user: User, id):
 
     keyboard = InlineKeyboardMarkup(row_width=3)
     keyboard.add(InlineKeyboardButton(text=_('remove_from_cart_btn', user.lang),
-                                       callback_data=remove_from_cart.new(product_id=product.id, current_number=id)))
+                                      callback_data=remove_from_cart.new(product_id=product.id, current_number=id)))
     if id == 0:
         previous_button = "null"
     else:
-        previous_button = product_in_cart.new(product_id=id-1)
+        previous_button = product_in_cart.new(product_id=id - 1)
     if id == count - 1:
         next_button = "null"
     else:
-        next_button = product_in_cart.new(product_id=id+1)
+        next_button = product_in_cart.new(product_id=id + 1)
     keyboard.add(
         InlineKeyboardButton(text="◀️",
                              callback_data=previous_button,
@@ -115,10 +115,9 @@ def make_cart_view_template(user: User, id):
     )
     total_payment = calculate_total_cost(products=products)
 
-    selected_products = ",".join([str(item.id) for item in products])
     keyboard.add(InlineKeyboardButton(text=f"💳  {total_payment}",
-                                       callback_data=payment_button.new(products=selected_products)))
-    
+                                      callback_data="make_payment"))
+
     photo = open(f"{media_root}/{product.image}", 'rb')
 
     return text, keyboard, photo
@@ -128,7 +127,8 @@ def get_payment_buttons(user, products):
     """Return pay and cancel button for the payment message"""
 
     keyboard = InlineKeyboardMarkup(row_width=1)
-    keyboard.add(InlineKeyboardButton(text=f"{_('pay', user.lang)} {calculate_total_cost(products=products)}", pay=True))
+    keyboard.add(
+        InlineKeyboardButton(text=f"{_('pay', user.lang)} {calculate_total_cost(products=products)}", pay=True))
     keyboard.add(InlineKeyboardButton(text=_('cancel_payment', user.lang), callback_data="cancel_payment"))
     return keyboard
 
@@ -141,24 +141,25 @@ def make_orders_view_template(user: User, id):
 
     if count == 0:
         return "empty", 0
-    
+
     order: Order = orders[id]
 
     text = _('order_info_template', user.lang).format(order_id=order.id,
-                                                        paid_money=f"{order.total_cost} so'm",
-                                                        payment_time=order.creation_date.astimezone(pytz.timezone('Asia/Tashkent')).strftime('%d/%m/%Y, %H:%M'),
-                                                        address=order.address_location,
-                                                        ordered_products=order.products_list)
-    
+                                                      paid_money=f"{order.total_cost} so'm",
+                                                      payment_time=order.creation_date.astimezone(
+                                                          pytz.timezone('Asia/Tashkent')).strftime('%d/%m/%Y, %H:%M'),
+                                                      address=order.address_location,
+                                                      ordered_products=order.products_list)
+
     keyboard = InlineKeyboardMarkup(row_width=3)
     if id == 0:
         previous_button = "null"
     else:
-        previous_button = orders_button.new(order_id=id-1)
+        previous_button = orders_button.new(order_id=id - 1)
     if id == count - 1:
         next_button = "null"
     else:
-        next_button = orders_button.new(order_id=id+1)
+        next_button = orders_button.new(order_id=id + 1)
     keyboard.add(
         InlineKeyboardButton(text="◀️",
                              callback_data=previous_button,

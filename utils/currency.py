@@ -1,5 +1,6 @@
 import requests
 
+
 def get_usd_to_uzs_currency():
     """Return USD currency rate"""
 
@@ -8,5 +9,6 @@ def get_usd_to_uzs_currency():
     for i in data:
         if i['Ccy'] == 'USD':
             return int(float(i['Rate']))
+
 
 usd_in_uzs = get_usd_to_uzs_currency()

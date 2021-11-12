@@ -1,5 +1,5 @@
-import logging
 import asyncio
+import logging
 
 from aiogram.dispatcher.filters.builtin import Command
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -11,7 +11,7 @@ from aiogram.types.reply_keyboard import ReplyKeyboardRemove
 from asgiref.sync import sync_to_async
 
 from Bot.models import User
-from filters.admins import IsAdmin
+from filters.private_filters import IsAdmin
 from loader import dp
 
 
@@ -73,7 +73,7 @@ async def send_broadcast_start(message: Message, state: FSMContext):
                 count += 1
             except Exception as error:
                 logging.info(str(error))
-        await asyncio.sleep(.02)
+        await asyncio.sleep(.01)
     finally:
         await message.answer(f"Message sent to {count} users.", reply_markup=ReplyKeyboardRemove())
     await state.finish()

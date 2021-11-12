@@ -1,5 +1,6 @@
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 
 class Category(models.Model):
     """Category of product"""
@@ -27,7 +28,7 @@ class Product(models.Model):
     link = models.CharField(verbose_name='Telegra.ph havola',
                             max_length=255, null=True, blank=True)
     price = models.IntegerField(verbose_name='Narxi', validators=[
-                                MinValueValidator(1), MaxValueValidator(100000000)])
+        MinValueValidator(1), MaxValueValidator(100000000)])
     currency = models.CharField(verbose_name='Valyuta', max_length=5, choices=(
         ("so'm", "So'm"), ('$', "Dollar")), default="so'm")
     image = models.ImageField(
@@ -76,11 +77,11 @@ class User(models.Model):
 class Order(models.Model):
     "Models order"
 
-    id=models.BigAutoField(primary_key=True, verbose_name='Buyurtma raqami')
+    id = models.BigAutoField(primary_key=True, verbose_name='Buyurtma raqami')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Foydalanuvchi", related_name='orders')
     total_cost = models.IntegerField(verbose_name='Narxi')
     creation_date = models.DateTimeField(verbose_name='Sanasi', auto_now_add=True)
-    address_location = models.TextField(verbose_name="Manzili", max_length=10000) 
+    address_location = models.TextField(verbose_name="Manzili", max_length=10000)
     ordered_products = models.ManyToManyField(Product)
 
     def __str__(self):
@@ -88,7 +89,8 @@ class Order(models.Model):
 
     @property
     def products_list(self):
-        return "\n".join([f"    {str(i+1)}. {str(item)}" for i, item in enumerate(self.ordered_products.all())])
+        return "\n".join([f"    {str(i + 1)}. {str(item)}" for i, item in enumerate(self.ordered_products.all())])
+
     products_list.fget.short_description = "Olingan maxsulotlar"
 
     class Meta:

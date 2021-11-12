@@ -44,8 +44,8 @@ def calculate_total_cost(products):
     total = 0
     for product in products:
         if product.currency == '$':
-            total += product.price*usd_in_uzs
+            total += product.price * usd_in_uzs
         else:
             total += product.price
-    
+
     return '{:,}'.format(total).replace(',', ' ') + " UZS"

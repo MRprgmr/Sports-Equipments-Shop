@@ -1,17 +1,19 @@
+from datetime import datetime
+
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.types.message import ContentTypes
 from aiogram.types.reply_keyboard import ReplyKeyboardRemove
-from Bot.models import Order, Product, User
+
+from Bot.models import Order, User
 from data.config import CONTACT_NUMBER as contact_number
-from datetime import datetime
-from localization.strings import _
+from data.config import PAYMENT_PROVIDER, ORDERS_GROUP, CONTACT_NUMBER
+from keyboards.inline.private_templates import get_payment_buttons
 from loader import dp, bot
-from keyboards.inline.private_templates import get_payment_buttons, payment_button
+from localization.strings import _
 from states.private_states import CartState, ClickPaymentState
 from utils.core import get_user, send_main_menu, stoa
 from utils.currency import usd_in_uzs
-from data.config import PAYMENT_PROVIDER, ORDERS_GROUP, CONTACT_NUMBER
 
 shipping_options = {
     'courtyard_house': 'Hovli uy',
@@ -26,10 +28,10 @@ def get_label_prices(products):
     for product in products:
         if product.currency == '$':
             prices.append(types.LabeledPrice(label=product.title,
-                          amount=product.price*usd_in_uzs*100))
+                                             amount=product.price * usd_in_uzs * 100))
         else:
             prices.append(types.LabeledPrice(
-                label=product.title, amount=product.price*100))
+                label=product.title, amount=product.price * 100))
 
     return prices
 
@@ -44,15 +46,13 @@ def get_shipping_options(user):
     return shipping_options
 
 
-@dp.callback_query_handler(payment_button.filter(), state=CartState.opened_cart)
+@dp.callback_query_handler(text='make_payment', state=CartState.opened_cart)
 async def send_payment_invoice(call: types.CallbackQuery, callback_data: dict):
     """When user press pay button in cart"""
 
     user: User = await get_user(call.from_user)
 
-    products_list = list(map(int, callback_data['products'].split(',')))
-
-    products = Product.objects.filter(id__in=products_list)
+    products = await stoa(user.product_cart.all)()
     title = _('make_payment', user.lang)
     description = _('payment_description', user.lang).format(
         phone_number=contact_number)
@@ -113,16 +113,16 @@ def get_products_list(order):
 
 @dp.message_handler(content_types=ContentTypes.SUCCESSFUL_PAYMENT, state=ClickPaymentState.expect_payment)
 async def got_payment(message: types.Message):
-    """When user has successfully transfered money for products"""
+    """When user has successfully transferred money for products"""
 
     user: User = await get_user(message.from_user)
 
-    address = f"Davlat:  {message.successful_payment.order_info.shipping_address.country_code}\n"\
-        f"Viloyat:   {message.successful_payment.order_info.shipping_address.city}\n"\
-        f"Shahar:   {message.successful_payment.order_info.shipping_address.state}\n"\
-        f"Manzil 1:   {message.successful_payment.order_info.shipping_address.street_line1}\n"\
-        f"Manzil 2:   {message.successful_payment.order_info.shipping_address.street_line2}\n"\
-        f"Pochta indeksi:  {message.successful_payment.order_info.shipping_address.post_code}\n"
+    address = f"Davlat:  {message.successful_payment.order_info.shipping_address.country_code}\n" \
+              f"Viloyat:   {message.successful_payment.order_info.shipping_address.city}\n" \
+              f"Shahar:   {message.successful_payment.order_info.shipping_address.state}\n" \
+              f"Manzil 1:   {message.successful_payment.order_info.shipping_address.street_line1}\n" \
+              f"Manzil 2:   {message.successful_payment.order_info.shipping_address.street_line2}\n" \
+              f"Pochta indeksi:  {message.successful_payment.order_info.shipping_address.post_code}\n"
     name = message.successful_payment.order_info.name
     phone_number = '+' + message.successful_payment.order_info.phone_number
     total_amount = message.successful_payment.total_amount // 100
@@ -137,15 +137,15 @@ async def got_payment(message: types.Message):
 
     products_set = await stoa(get_products_list)(order)
 
-    to_group_message = f"Yangi buyurtma #{order.id}\n\n"\
-        f"<b>👤 Foydalanuvchi:</b>\n"\
-        f"  Ismi:   <a href='{user.mention_link()}'>{name}</a>\n"\
-        f"  Telefon raqami:   {phone_number}\n"\
-        f"  Turar joyi:   {shipping_option}\n\n"\
-        f"<b>📍 Manzil:</b><code>\n{address}</code>\n\n"\
-        f"<b>📦 Olingan maxsulotlar:</b>\n<code>{products_set}</code>\n\n"\
-        f"<b>📅 To'lov sanasi:</b>   {datetime.now().strftime('%d/%M/%Y, %H:%M')}\n\n"\
-        f"<b>💳 To'langan summa:</b>   {total_amount} so'm."
+    to_group_message = f"Yangi buyurtma #{order.id}\n\n" \
+                       f"<b>👤 Foydalanuvchi:</b>\n" \
+                       f"  Ismi:   <a href='{user.mention_link()}'>{name}</a>\n" \
+                       f"  Telefon raqami:   {phone_number}\n" \
+                       f"  Turar joyi:   {shipping_option}\n\n" \
+                       f"<b>📍 Manzil:</b><code>\n{address}</code>\n\n" \
+                       f"<b>📦 Olingan maxsulotlar:</b>\n<code>{products_set}</code>\n\n" \
+                       f"<b>📅 To'lov sanasi:</b>   {datetime.now().strftime('%d/%M/%Y, %H:%M')}\n\n" \
+                       f"<b>💳 To'langan summa:</b>   {total_amount} so'm."
 
     try:
         await dp.bot.send_message(chat_id=int(ORDERS_GROUP), text=to_group_message)
@@ -154,6 +154,7 @@ async def got_payment(message: types.Message):
 
     await stoa(user.product_cart.clear)()
 
-    answer_message = str(_('successfully_payment_msg', user.lang)).format(phone_number=CONTACT_NUMBER, order_number=order.id)
+    answer_message = str(_('successfully_payment_msg', user.lang)).format(phone_number=CONTACT_NUMBER,
+                                                                          order_number=order.id)
     await message.answer(text=answer_message)
     await send_main_menu(user)

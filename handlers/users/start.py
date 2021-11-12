@@ -2,13 +2,14 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.types.message import Message, ReplyKeyboardRemove
+
 from Bot.models import User
 from filters.private_filters import full_name_filter, text_translations_filter
 from keyboards.default.private_buttons import get_contact_send_template, languages_selection_template
 from loader import dp
+from localization.strings import _, check_language_by_text
 from states.private_states import RegistrationState
 from utils.core import get_user, phone_number_validater, send_main_menu, stoa
-from localization.strings import _, check_language_by_text
 
 
 @dp.message_handler(CommandStart(), state='*')

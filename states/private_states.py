@@ -7,23 +7,24 @@ class RegistrationState(StatesGroup):
 
 
 class SettingsState(StatesGroup):
-	options = State()
-	change_language = State()
-	change_number = State()
+    options = State()
+    change_language = State()
+    change_number = State()
 
 
 class ShoppingState(StatesGroup):
-	catalogs = State()
-	product_view = State()
+    catalogs = State()
+    product_view = State()
 
 
 class CartState(StatesGroup):
-	opened_cart = State()
+    opened_cart = State()
 
 
 class ClickPaymentState(StatesGroup):
-	pay_button = State()
-	expect_payment = State()
+    pay_button = State()
+    expect_payment = State()
+
 
 class OrdersState(StatesGroup):
-	order_view = State()
+    order_view = State()

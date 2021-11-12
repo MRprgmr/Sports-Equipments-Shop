@@ -1,22 +1,24 @@
+from aiogram import types
+from aiogram.dispatcher.storage import FSMContext
 from aiogram.types.callback_query import CallbackQuery
 from aiogram.types.inline_keyboard import InlineKeyboardButton
 from aiogram.types.input_media import InputMediaPhoto
-from loader import dp
-from aiogram import types
-from utils.core import stoa, get_user
-from aiogram.dispatcher.storage import FSMContext
+
 from Bot.models import Category, Product, User
-from utils.core import send_main_menu
-from localization.strings import _
-from states.private_states import CartState, ShoppingState
 from filters.private_filters import text_translations_filter, category_filter
 from keyboards.default.private_buttons import get_catalogs_list_template, get_back_button
-from keyboards.inline.private_templates import make_cart_view_template, make_product_view_template, product_view_callback, add_to_cart
+from keyboards.inline.private_templates import make_cart_view_template, make_product_view_template, \
+    product_view_callback, add_to_cart
+from loader import dp
+from localization.strings import _
+from states.private_states import CartState, ShoppingState
+from utils.core import send_main_menu
+from utils.core import stoa, get_user
 
 
 @dp.message_handler(text_translations_filter('menu_catalog_btn'), state='*')
 async def catalog_button(message: types.Message):
-    """When user press cataog button in main menu"""
+    """When user press catalog button in main menu"""
 
     user: User = await get_user(message.from_user)
 

@@ -1,8 +1,10 @@
-from aiogram.types.message import Message
 from aiogram.dispatcher.filters import BoundFilter
+from aiogram.types import Message
+
 from Bot.models import Category
-from utils.core import stoa
+from data.config import ADMINS
 from localization.strings import get_translations_from_key
+from utils.core import stoa
 
 
 class text_translations_filter(BoundFilter):
@@ -44,6 +46,14 @@ class category_filter(BoundFilter):
     async def check(self, message: Message):
         titles = await stoa(get_categories)()
         if message.text in titles:
+            return True
+        else:
+            return False
+
+
+class IsAdmin(BoundFilter):
+    async def check(self, message: Message):
+        if str(message.from_user.id) in ADMINS:
             return True
         else:
             return False
